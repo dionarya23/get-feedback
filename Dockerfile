@@ -1,27 +1,22 @@
 FROM mcr.microsoft.com/playwright:v1.61.0-jammy
-
 WORKDIR /app
+ENV PNPM_MINIMUM_RELEASE_AGE=0
 
-# Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10.28.2
 
-# Copy package files
 COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies
 RUN pnpm install
 
-# Copy project files
 COPY . .
 
-# Generate Prisma client
 RUN pnpm prisma generate
 
-# Build the Next.js application
 RUN pnpm build
 
-# Expose port
+COPY entrypoint.sh ./
+RUN chmod +x entrypoint.sh
+
 EXPOSE 3000
 
-# Start the application
-CMD ["pnpm", "start"]
+CMD ["./entrypoint.sh"]
