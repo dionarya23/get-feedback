@@ -62,3 +62,8 @@ Tools like **Marker.io**, **Pastel**, or **BugHerd** exist, but they are built f
 **What next:** 
 - Implement an optional Chrome Extension for capturing auth-walled or local development sites.
 - Add an "Export to PDF" feature for clients who prefer downloading physical files.
+
+## How I used AI (and what it got wrong)
+**Where it helped:** I used an AI coding assistant (Antigravity) to rapidly bootstrap the Next.js 14 boilerplate, configure the Prisma database schema, and write the boilerplate Playwright headless-browser route (`/api/screenshot`). It saved me hours of digging through documentation for standard setups.
+
+**What it got wrong:** During the annotation capture phase, the AI suggested and implemented `html2canvas` to render the canvas into a final image. However, when I tested it, the app crashed with an *"unsupported color function oklab"* error. The AI failed to account for the fact that Tailwind CSS v4 uses modern `oklch/oklab` colors under the hood, which `html2canvas`'s custom CSS parser cannot read. I caught this, removed `html2canvas`, and replaced it with `html-to-image` (which uses native SVG `foreignObject` rendering), completely solving the bug.
