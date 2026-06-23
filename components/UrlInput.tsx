@@ -18,11 +18,9 @@ export default function UrlInput() {
     }
 
     try {
-      // Basic URL validation
       const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
       const parsedUrl = new URL(formattedUrl);
-      
-      // Redirect to annotation page
+
       router.push(`/annotate?url=${encodeURIComponent(parsedUrl.toString())}`);
     } catch (err) {
       setError('Please enter a valid URL.');
