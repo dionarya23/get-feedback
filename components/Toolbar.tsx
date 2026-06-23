@@ -7,9 +7,10 @@ interface ToolbarProps {
   setMode: (mode: AnnotationMode) => void;
   onReset: () => void;
   onShare?: () => void;
+  isSharing?: boolean;
 }
 
-export default function Toolbar({ mode, setMode, onReset, onShare }: ToolbarProps) {
+export default function Toolbar({ mode, setMode, onReset, onShare, isSharing }: ToolbarProps) {
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-white border border-black shadow-sm flex gap-2 p-2 font-sans">
       <button
@@ -36,9 +37,10 @@ export default function Toolbar({ mode, setMode, onReset, onShare }: ToolbarProp
       <div className="w-px bg-neutral-300 mx-1" />
       <button
         onClick={onShare}
-        className="px-4 py-2 text-sm font-medium bg-black text-white border border-black hover:bg-white hover:text-black transition-colors"
+        disabled={isSharing}
+        className="px-4 py-2 text-sm font-medium bg-black text-white border border-black hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-[160px]"
       >
-        Generate & Share
+        {isSharing ? 'Generating...' : 'Generate & Share'}
       </button>
     </div>
   );
