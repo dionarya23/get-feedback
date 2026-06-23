@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Get-Feedback
 
-## Getting Started
+Get-Feedback is a minimalist, industrial-style visual feedback tool. It allows non-technical clients to paste a website URL, capture a screenshot, draw simple annotations (pins and rectangles) with comments, and share the final annotated image with a freelancer via a generated link.
 
-First, run the development server:
+## How to run it locally
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Install Dependencies**
+   ```bash
+   pnpm install
+   # Install Playwright browsers for the screenshot engine:
+   npx playwright install chromium
+   ```
+2. **Environment Setup**
+   Copy `.env.example` to `.env` and configure your credentials:
+   ```env
+   DATABASE_URL="mysql://root:root@127.0.0.1:3307/get_feedback_db"
+   CLOUDINARY_CLOUD_NAME="..."
+   CLOUDINARY_API_KEY="..."
+   CLOUDINARY_API_SECRET="..."
+   NEXT_PUBLIC_APP_URL="http://localhost:3000"
+   ```
+3. **Setup Database Schema**
+   ```bash
+   pnpm prisma db push
+   ```
+4. **Run the App**
+   ```bash
+   pnpm dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Who it's for, and the one job it has to do well
+**Who it's for:** Independent freelancers and small agencies communicating with non-technical clients.
+**The one job:** To instantly turn a messy website feedback process (usually done via long emails or WhatsApp chats) into a single, annotated image without requiring the client to create an account or install browser extensions.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Why this problem, and how you know it's worth solving
+Communicating visual changes over text is frustrating and prone to misinterpretation. Freelancers waste hours deciphering vague client feedback like "move the red button down a bit". It's worth solving because time is money for freelancers, and reducing friction in client communication directly increases project profitability and client satisfaction.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## What's already out there for it, and why you built this anyway
+Tools like **Marker.io**, **Pastel**, or **BugHerd** exist, but they are built for large teams with complex scopes, heavy widget installations, and ticketing system integrations (like Jira). I built **Get-Feedback** because small freelancers don't need enterprise bloat. They need something dead simple, zero-setup for the client, and straight to the point—just paste a URL, point, click, and share. The generated view page is just the image itself, with absolutely zero distractions.
 
-## Learn More
+## What you put in scope, what you left out, and why
+**In scope:** 
+- Headless browser screenshot capture via Playwright.
+- Two annotation tools: Pins and Rectangles with auto-expanding textareas.
+- Image generation and sharing via Cloudinary.
+- Strict industrial aesthetic (no AI-slop, no heavy shadows or rounded corners).
+**Left out:**
+- User Authentication (Login/Signup). Left out to ensure zero friction for the client.
+- Comment threads and resolution states. Left out to keep the tool "fire-and-forget". The focus is on capturing the feedback, not managing a project.
 
-To learn more about Next.js, take a look at the following resources:
+## Where you didn't have answers, what you assumed
+- **Assumption:** I assumed that websites to be annotated are publicly accessible. Pages behind logins or auth walls cannot be captured by the backend headless browser in this version.
+- **Assumption:** I assumed mobile-responsiveness for the annotation canvas wasn't the absolute priority for v1, since most heavy website review/annotation by clients happens on desktops.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Three questions you'd ask a real user before building more
+1. How often do your clients review pages on mobile devices versus desktop?
+2. Would you prefer the feedback to be grouped into a single dashboard (requiring you to log in) or is receiving individual links via chat/email enough?
+3. If you could choose, which feature do you need the most: Freehand Drawing or Precision Pin & Rectangle?
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## How you'd know it's working, and what you'd do next
+**How I'd know:** By tracking the number of generated unique feedback slugs and measuring the drop-off rate between "landing on the editor" and "clicking Generate & Share". If clients successfully create and share links, the core value prop is proven.
+**What next:** 
+- Implement an optional Chrome Extension for capturing auth-walled or local development sites.
+- Add an "Export to PDF" feature for clients who prefer downloading physical files.
